@@ -1,0 +1,11 @@
+name: Node Check Version
+description: Action to check if a NodeJs projects's version strings are consistent
+runs:
+  using: composite
+  steps:
+    - run: |
+        echo "BEEZ_VERSION_FILE=$(cat VERSION)" >> $GITHUB_ENV
+        echo "BEEZ_PACKAGE_FILE=$(sed -e 's/^"//' -e 's/"$//' <<< $(jq .version package.json))" >> $GITHUB_ENV
+        echo "BEEZ_PACKAGE_LOCK_FILE=$(sed -e 's/^"//' -e 's/"$//' <<< $(jq .version package-lock.json))" >> $GITHUB_ENV
+        [[ "$BEEZ_VERSION_FILE" == "$BEEZ_PACKAGE_FILE" && "$BEEZ_PACKAGE_FILE" == "$BEEZ_PACKAGE_LOCK_FILE" ]]
+      shell: bash

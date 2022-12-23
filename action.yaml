@@ -11,4 +11,5 @@ runs:
           [[ "$BEEZ_VERSION_FILE" == "$BEEZ_PACKAGE_FILE" && "$BEEZ_PACKAGE_FILE" == "$BEEZ_PACKAGE_LOCK_FILE" ]]
         else
           [[ "$BEEZ_VERSION_FILE" == "$BEEZ_PACKAGE_FILE" ]]
+        fi
       shell: bash

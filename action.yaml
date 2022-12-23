@@ -6,6 +6,9 @@ runs:
     - run: |
         echo "BEEZ_VERSION_FILE=$(cat VERSION)" >> $GITHUB_ENV
         echo "BEEZ_PACKAGE_FILE=$(sed -e 's/^"//' -e 's/"$//' <<< $(jq .version package.json))" >> $GITHUB_ENV
-        echo "BEEZ_PACKAGE_LOCK_FILE=$(sed -e 's/^"//' -e 's/"$//' <<< $(jq .version package-lock.json))" >> $GITHUB_ENV
-        [[ "$BEEZ_VERSION_FILE" == "$BEEZ_PACKAGE_FILE" && "$BEEZ_PACKAGE_FILE" == "$BEEZ_PACKAGE_LOCK_FILE" ]]
+        if [ -f "./package-lock.json" ]; then
+          echo "BEEZ_PACKAGE_LOCK_FILE=$(sed -e 's/^"//' -e 's/"$//' <<< $(jq .version package-lock.json))" >> $GITHUB_ENV
+          [[ "$BEEZ_VERSION_FILE" == "$BEEZ_PACKAGE_FILE" && "$BEEZ_PACKAGE_FILE" == "$BEEZ_PACKAGE_LOCK_FILE" ]]
+        else
+          [[ "$BEEZ_VERSION_FILE" == "$BEEZ_PACKAGE_FILE" ]]
       shell: bash

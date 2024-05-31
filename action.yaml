@@ -3,11 +3,18 @@ description: Action to check if a NodeJs projects's version strings are consiste
 runs:
   using: composite
   steps:
-    - run: |
+    - name: Set Environment Variables from files
+      run: |
         echo "BEEZ_VERSION_FILE=$(cat VERSION)" >> $GITHUB_ENV
         echo "BEEZ_PACKAGE_FILE=$(sed -e 's/^"//' -e 's/"$//' <<< $(jq .version package.json))" >> $GITHUB_ENV
         if [ -f "./package-lock.json" ]; then
           echo "BEEZ_PACKAGE_LOCK_FILE=$(sed -e 's/^"//' -e 's/"$//' <<< $(jq .version package-lock.json))" >> $GITHUB_ENV
+        fi
+      shell: bash
+
+    - name: Check if version strings are consistent
+      run: |
+        if [ -f "./package-lock.json" ]; then
           [[ "$BEEZ_VERSION_FILE" == "$BEEZ_PACKAGE_FILE" && "$BEEZ_PACKAGE_FILE" == "$BEEZ_PACKAGE_LOCK_FILE" ]]
         else
           [[ "$BEEZ_VERSION_FILE" == "$BEEZ_PACKAGE_FILE" ]]
